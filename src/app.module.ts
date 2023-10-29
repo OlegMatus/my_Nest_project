@@ -8,9 +8,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CustomConfigModule } from './config/config.module';
 import { CustomConfigService } from './config/config.service';
-import { UserController } from './user/user.controller';
 import { UserModule } from './user/user.module';
-import { UserService } from './user/user.service';
 
 @Module({
   imports: [
@@ -37,7 +35,7 @@ import { UserService } from './user/user.service';
     UserModule,
     AuthModule,
   ],
-  controllers: [AppController, UserController],
-  providers: [AppService, UserService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

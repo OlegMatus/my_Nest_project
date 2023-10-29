@@ -9,10 +9,12 @@ import {
   Post,
   Res,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { UserCreateDto } from './dto/user.dto';
 import { UserService } from './user.service';
 
+@ApiTags('User')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -28,10 +30,11 @@ export class UserController {
 
   @Post('create')
   async createUser(@Body() body: UserCreateDto, @Res() res: any) {
+    console.log(22);
     // return await this.userService.createUser(body);
     return res
       .status(HttpStatus.CREATED)
-      .json(this.userService.createUser(body));
+      .json(await this.userService.createUser(body));
   }
 
   @Patch('/:userId')
