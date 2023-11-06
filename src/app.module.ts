@@ -26,7 +26,7 @@ import { UserModule } from './user/user.module';
           database: customConfigService.db_database,
           synchronize: true,
           entities: [
-            path.join(__dirname, 'database', '**', '*.entity{.ts, .js}'),
+            path.join(__dirname, 'database', '**', '*.entity{.ts,.js}'),
           ],
         };
       },

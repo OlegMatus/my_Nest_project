@@ -34,3 +34,13 @@ export class UserCreateDto {
   @IsOptional()
   status: boolean;
 }
+export class UserUpdateDto {}
+
+export class UserCreateResponse extends UserCreateDto {
+  @ApiProperty()
+  createdAt: string;
+  @ApiProperty()
+  updatedAt: string;
+  @ApiProperty()
+  id: string;
+}

@@ -9,12 +9,13 @@ import {
   Post,
   Res,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { UserCreateDto } from './dto/user.dto';
+import { UserCreateDto, UserCreateResponse } from './dto/user.dto';
 import { UserService } from './user.service';
 
 @ApiTags('User')
+@ApiExtraModels(UserCreateResponse)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -28,6 +29,7 @@ export class UserController {
     return await this.userService.getOneUser(param.userId);
   }
 
+  @ApiResponse({ status: HttpStatus.CREATED, type: UserCreateResponse })
   @Post('create')
   async createUser(@Body() body: UserCreateDto, @Res() res: any) {
     console.log(22);
