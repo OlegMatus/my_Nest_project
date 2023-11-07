@@ -1,6 +1,6 @@
 import { CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-export abstract class CreatedUpdatedModel {
+export abstract class CreatedUpdatedDataModel {
   @CreateDateColumn({
     type: 'timestamptz',
     default: () => 'NOW()',

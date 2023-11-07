@@ -7,41 +7,51 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Res,
 } from '@nestjs/common';
-import { ApiExtraModels, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { UserCreateDto, UserCreateResponse } from './dto/user.dto';
+import { UserResponseMapper } from './user.response.mapper';
 import { UserService } from './user.service';
 
 @ApiTags('User')
-@ApiExtraModels(UserCreateResponse)
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-  @Get('/list')
+
+  @Get('')
   async getAllUsers() {
     return await this.userService.getAllUsers();
   }
-
-  @Get('/:userId')
-  async getById(@Param() param: { userId: string }) {
-    return await this.userService.getOneUser(param.userId);
-  }
-
-  @ApiResponse({ status: HttpStatus.CREATED, type: UserCreateResponse })
+  @ApiOperation({ summary: 'Create new user' })
   @Post('create')
-  async createUser(@Body() body: UserCreateDto, @Res() res: any) {
-    console.log(22);
-    // return await this.userService.createUser(body);
-    return res
-      .status(HttpStatus.CREATED)
-      .json(await this.userService.createUser(body));
+  async createUser(@Body() body: UserCreateDto): Promise<UserCreateResponse> {
+    const result = await this.userService.createUser(body);
+    return UserResponseMapper.toDetailsDto(result);
   }
 
-  @Patch('/:userId')
-  async updateUser() {}
+  @ApiOperation({ summary: 'Get user by id' })
+  @Get(':userId')
+  async getUserById(
+    @Param('userId') userId: string,
+  ): Promise<UserCreateResponse> {
+    const result = await this.userService.getUserById(userId);
+    return UserResponseMapper.toDetailsDto(result);
+  }
 
-  @Delete('/:userId')
+  @ApiOperation({ summary: 'Update user by id' })
+  @Put(':userId')
+  async updateUser(
+    @Param('userId') userId: string,
+    @Body() body: UserCreateDto,
+  ): Promise<UserCreateResponse> {
+    const result = await this.userService.updateUser(userId, body);
+    return UserResponseMapper.toDetailsDto(result);
+  }
+
+  @ApiOperation({ summary: 'Delete user by id' })
+  @Delete(':userId')
   async deleteUser() {}
 }

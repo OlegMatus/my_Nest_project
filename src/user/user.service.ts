@@ -1,21 +1,29 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 
+import { UserEntity } from '../database/entities/user.entity';
 import { UserCreateDto } from './dto/user.dto';
 import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UserService {
-  private users = [];
-
   constructor(private readonly userRepository: UserRepository) {}
+  public async getAllUsers() {
+    return;
+  }
 
-  async createUser(userData: UserCreateDto) {
-    const userEmail = userData.email.trim();
-    const findUser = await this.userRepository.findOne({
-      where: { email: userEmail },
+  public async createUser(userData: UserCreateDto): Promise<UserEntity> {
+    // const userEmail = userData.email.trim();
+    const findUser = await this.userRepository.findOneBy({
+      email: userData.email,
     });
     if (findUser) {
-      throw new HttpException('User already exist', HttpStatus.BAD_REQUEST);
+      throw new BadRequestException('User already exist');
     }
     try {
       const newUser = this.userRepository.create(userData);
@@ -24,10 +32,19 @@ export class UserService {
       throw new HttpException('Create user failed', HttpStatus.BAD_REQUEST);
     }
   }
-  async getOneUser(userId: string) {
-    return this.users.find((item) => item.id === Number(userId))[0];
+  public async getUserById(userId: string): Promise<UserEntity> {
+    return await this.findUserByIdOrException(userId);
   }
-  async getAllUsers() {
-    return this.users;
+  public async updateUser(userId: string, dto: any): Promise<UserEntity> {
+    const entity = await this.findUserByIdOrException(userId);
+    this.userRepository.merge(entity, dto);
+    return await this.userRepository.save(entity);
+  }
+  private async findUserByIdOrException(userId: string): Promise<UserEntity> {
+    const user = await this.userRepository.findOneBy({ id: userId });
+    if (!user) {
+      throw new UnprocessableEntityException('User entity not found');
+    }
+    return user;
   }
 }

@@ -1,9 +1,9 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-import { CreatedUpdatedModel } from './common/created-updated.model';
+import { CreatedUpdatedDataModel } from './common/created-updated.model';
 
-@Entity('userCopy')
-export class UserEntity extends CreatedUpdatedModel {
+@Entity('user')
+export class UserEntity extends CreatedUpdatedDataModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
