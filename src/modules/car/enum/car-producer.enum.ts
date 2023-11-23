@@ -1,4 +1,4 @@
-export enum UserListOrderFieldEnum {
+export enum ECarProducer {
   createdAt = 'createdAt',
   age = 'age',
 }
